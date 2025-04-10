@@ -1,0 +1,18 @@
+# Generate semantic version number from commit history
+#
+# HP Dumm
+#
+# 2025-04-10
+#
+# See: https://www.conventionalcommits.org
+
+# exit on first fail
+set -e
+
+# get version number from fix, feat, ! in git commits
+patch=$(git log --oneline | grep -E -i -c 'fix(\(.*\))?!?:' | cat )
+minor=$(git log --oneline | grep -E -i -c 'feat(\(.*\))?!?:' | cat )
+major=$(git log --oneline | grep -E -i -c '!:' | cat )
+version=$major.$minor.$patch
+echo $version
+
