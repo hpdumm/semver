@@ -2,17 +2,37 @@
 #
 # HP Dumm
 #
-# 2025-04-10
+# 2025-09-05
 #
 # See: https://www.conventionalcommits.org
 
-# exit on first fail
-set -e
+#!/usr/bin/python
 
-# get version number from fix, feat, ! in git commits
-patch=$(git log --oneline | grep -E -i -c 'fix(\(.*\))?!?:' | cat )
-minor=$(git log --oneline | grep -E -i -c 'feat(\(.*\))?!?:' | cat )
-major=$(git log --oneline | grep -E -i -c '!:' | cat )
-version=$major.$minor.$patch
-echo $version
+import subprocess
+import re
 
+# counters
+major = 0
+minor = 0
+fix = 0
+
+# regex
+fix_pattern = re.compile(r"\w*\sfix(\(.*\))?:")
+minor_pattern = re.compile(r"\w*\sfeat(\(.*\))?:")
+major_pattern = re.compile(r"!:")
+
+# loop
+log_text = subprocess.check_output(["git", "log", "--oneline"]).decode("utf-8")
+for line in reversed(log_text.split("\n")):
+  if fix_pattern.match(line):
+    fix += 1
+  elif minor_pattern.match(line):
+    fix = 0
+    minor += 1
+  elif major_pattern.search(line):
+    fix = 0
+    minor = 0
+    major += 1
+
+# output
+print(f"{major}.{minor}.{fix}")
