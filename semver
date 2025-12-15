@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # Generate semantic version number from commit history
 #
 # HP Dumm
@@ -5,8 +7,6 @@
 # 2025-09-05
 #
 # See: https://www.conventionalcommits.org
-
-#!/usr/bin/python
 
 import subprocess
 import re
